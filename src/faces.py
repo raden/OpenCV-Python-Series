@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import numpy as np
 import cv2
 import pickle
@@ -6,9 +7,8 @@ face_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_frontalface_alt2
 eye_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_eye.xml')
 smile_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_smile.xml')
 
-
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-recognizer.read("./recognizors/face-trainner.yml")
+recognizer.read("./recognizers/face-trainner.yml")
 
 labels = {"person_name": 1}
 with open("pickles/face-labels.pickle", 'rb') as f:
@@ -21,9 +21,10 @@ while(True):
     # Capture frame-by-frame
     ret, frame = cap.read()
     gray  = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.5, minNeighbors=5)
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
+    #faces = face_cascade.detectMultiScale(gray, scaleFactor=6, minNeighbors=7)
     for (x, y, w, h) in faces:
-    	#print(x,y,w,h)
+    	print(x,y,w,h)
     	roi_gray = gray[y:y+h, x:x+w] #(ycord_start, ycord_end)
     	roi_color = frame[y:y+h, x:x+w]
 
@@ -46,9 +47,9 @@ while(True):
     	end_cord_x = x + w
     	end_cord_y = y + h
     	cv2.rectangle(frame, (x, y), (end_cord_x, end_cord_y), color, stroke)
-    	#subitems = smile_cascade.detectMultiScale(roi_gray)
-    	#for (ex,ey,ew,eh) in subitems:
-    	#	cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
+#    	subitems = smile_cascade.detectMultiScale(roi_gray)
+#    	for (ex,ey,ew,eh) in subitems:
+#    		cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
     # Display the resulting frame
     cv2.imshow('frame',frame)
     if cv2.waitKey(20) & 0xFF == ord('q'):
